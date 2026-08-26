@@ -1,0 +1,1588 @@
+{
+  "name": "CERESHOP电商系统接口测试Collection",
+  "base_url": "http://localhost:9007",
+  "variables": {
+    "token": "",
+    "orderId": "",
+    "parentOrderId": "",
+    "receiveId": "502",
+    "skuId": "2035",
+    "shopId": "155",
+    "couponId": "168",
+    "refreshToken": ""
+  },
+  "global_headers": {
+    "Accept": "application/json"
+  },
+  "cases": [
+    {
+      "name": "1. 登录模块 - 1.1 获取短信验证码",
+      "method": "GET",
+      "path": "/app/getCode",
+      "params": {
+        "phone": "13800138000"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "1. 登录模块 - 1.2 手机号验证码登录/注册",
+      "method": "POST",
+      "path": "/app/login",
+      "json": {
+        "phone": "13800138009",
+        "verificationCode": "9999",
+        "type": 2,
+        "terminal": 5
+      },
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "extract": {
+        "token": "data.token",
+        "refreshToken": "data.refreshToken"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data.token"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "1. 登录模块 - 1.3 刷新Token",
+      "method": "POST",
+      "path": "/app/refreshToken",
+      "json": {
+        "refreshToken": "${refreshToken}"
+      },
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data.token"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "2. 商品搜索与详情 - 2.1 首页数据查询",
+      "method": "GET",
+      "path": "/app/index",
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "2. 商品搜索与详情 - 2.2 商品搜索查询",
+      "method": "GET",
+      "path": "/app/getSearchProducts",
+      "params": {
+        "keyword": "商品",
+        "pageSize": "10",
+        "page": "1"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "2. 商品搜索与详情 - 2.3 商品详情查询",
+      "method": "GET",
+      "path": "/product/getById",
+      "params": {
+        "productId": "556"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data.productId"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data.price"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "2. 商品搜索与详情 - 2.4 历史搜索查询",
+      "method": "GET",
+      "path": "/app/getHistory",
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "2. 商品搜索与详情 - 2.5 查询热搜词",
+      "method": "GET",
+      "path": "/app/selectHotSearch",
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "3. 购物车模块 - 3.1 加入购物车",
+      "method": "POST",
+      "path": "/cart/addCart",
+      "json": {
+        "skuId": "${skuId}",
+        "number": 1,
+        "shopId": "${shopId}"
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "3. 购物车模块 - 3.2 购物车查询",
+      "method": "GET",
+      "path": "/cart/getCart",
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "3. 购物车模块 - 3.3 修改购物车商品数量",
+      "method": "POST",
+      "path": "/cart/updateNumber",
+      "json": {
+        "skuId": "${skuId}",
+        "number": 2
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "3. 购物车模块 - 3.4 删除购物车商品",
+      "method": "POST",
+      "path": "/cart/delete",
+      "json": {
+        "ids": [
+          "${skuId}"
+        ]
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "4. 收货地址模块 - 4.1 添加收货地址",
+      "method": "POST",
+      "path": "/receive/save",
+      "json": {
+        "receiveName": "测试用户",
+        "receivePhone": "13800138001",
+        "receiveAdress": "广东省深圳市南山区",
+        "address": "科技园南区测试路1号",
+        "label": "家",
+        "ifDefault": 1
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}",
+        "User-Agent": "PostmanRuntime/7.0"
+      },
+      "extract": {
+        "receiveId": "data.receiveId"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "4. 收货地址模块 - 4.2 收货地址列表查询",
+      "method": "GET",
+      "path": "/receive/getAll",
+      "params": {
+        "pageSize": "10",
+        "page": "1"
+      },
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "4. 收货地址模块 - 4.3 选择收货地址查询（结算用）",
+      "method": "GET",
+      "path": "/receive/getSelect",
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "4. 收货地址模块 - 4.4 修改收货地址",
+      "method": "POST",
+      "path": "/receive/update",
+      "json": {
+        "receiveId": "${receiveId}",
+        "receiveName": "测试用户",
+        "receivePhone": "13800138001",
+        "receiveAdress": "广东省深圳市南山区",
+        "address": "科技园南区修改后的地址XX号",
+        "ifDefault": 1
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "5. 优惠券模块 - 5.1 查询领券中心",
+      "method": "GET",
+      "path": "/coupon/getCouponCenterList",
+      "params": {
+        "pageSize": "10",
+        "page": "1"
+      },
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "5. 优惠券模块 - 5.2 领取优惠券",
+      "method": "POST",
+      "path": "/coupon/takeCoupon",
+      "json": {
+        "shopCouponId": "${couponId}"
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "5. 优惠券模块 - 5.3 我的卡券列表",
+      "method": "GET",
+      "path": "/coupon/getCoupons",
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "5. 优惠券模块 - 5.4 结算页优惠券列表查询",
+      "method": "GET",
+      "path": "/coupon/getOrderCoupons",
+      "params": {
+        "shopId": "${shopId}",
+        "price": "2999.00"
+      },
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "6. 结算与下单 - 6.1 结算查询（预下单）",
+      "method": "POST",
+      "path": "/order/getSettlement",
+      "json": {
+        "type": 1,
+        "shops": [
+          {
+            "shopId": "${shopId}",
+            "skus": [
+              {
+                "skuId": "${skuId}",
+                "number": 1,
+                "selected": 1,
+                "platformSeckillId": 0,
+                "platformDiscountId": 0,
+                "shopSeckillId": 0,
+                "shopDiscountId": 0,
+                "priceId": 0,
+                "composeId": 0,
+                "sceneId": 0,
+                "useMember": false,
+                "buyerCouponId": 0,
+                "buyerShopCouponId": 0
+              }
+            ],
+            "distribution": {
+              "distributionPrice": 0,
+              "logisticsId": -1,
+              "distributionName": "全国包邮"
+            }
+          }
+        ],
+        "receiveId": "${receiveId}",
+        "price": 2999.0,
+        "discountPrice": 0,
+        "couponId": 0
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data.shops"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "6. 结算与下单 - 6.2 提交订单",
+      "method": "POST",
+      "path": "/order/submit",
+      "json": {
+        "shops": [
+          {
+            "shopId": "${shopId}",
+            "skus": [
+              {
+                "skuId": "${skuId}",
+                "number": 1,
+                "selected": 1,
+                "platformSeckillId": 0,
+                "platformDiscountId": 0,
+                "shopSeckillId": 0,
+                "shopDiscountId": 0,
+                "priceId": 0,
+                "composeId": 0,
+                "sceneId": 0,
+                "useMember": false,
+                "buyerCouponId": 0,
+                "buyerShopCouponId": 0
+              }
+            ],
+            "distribution": {
+              "distributionPrice": 0,
+              "logisticsId": -1,
+              "distributionName": "全国包邮"
+            }
+          }
+        ],
+        "receiveId": "${receiveId}",
+        "price": 2999.0,
+        "discountPrice": 0,
+        "couponId": 0,
+        "paymentMode": 1
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "7. 支付模块 - 7.1 Demo支付桩（模拟支付）",
+      "method": "POST",
+      "path": "/demo/payment/complete",
+      "json": {
+        "orderId": "${orderId}",
+        "type": 1,
+        "money": 2999.0,
+        "paymentMode": 1
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data.transactionId"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "7. 支付模块 - 7.2 校验订单支付状态",
+      "method": "GET",
+      "path": "/order/checkPay",
+      "params": {
+        "orderId": "${orderId}",
+        "type": "1"
+      },
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "7. 支付模块 - 7.3 根据订单ID获取收款码",
+      "method": "GET",
+      "path": "/order/getUrl",
+      "params": {
+        "orderId": "${orderId}",
+        "type": "1"
+      },
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "7.4 支付桩负向测试 - 7.4.1 无Token访问支付桩（鉴权测试）",
+      "method": "POST",
+      "path": "/demo/payment/complete",
+      "json": {
+        "orderId": "${orderId}",
+        "type": 2,
+        "money": 2999.0,
+        "paymentMode": 1
+      },
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "7.4 支付桩负向测试 - 7.4.2 越权支付他人订单（订单归属测试）",
+      "method": "POST",
+      "path": "/demo/payment/complete",
+      "json": {
+        "orderId": 1,
+        "type": 2,
+        "money": 100.0,
+        "paymentMode": 1
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "70006"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "7.4 支付桩负向测试 - 7.4.3 重复支付已完成订单（重复支付测试）",
+      "method": "POST",
+      "path": "/demo/payment/complete",
+      "json": {
+        "orderId": "${orderId}",
+        "type": 2,
+        "money": 2999.0,
+        "paymentMode": 1
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "7.4 支付桩负向测试 - 7.4.4 缺少必填参数（参数校验测试）",
+      "method": "POST",
+      "path": "/demo/payment/complete",
+      "json": {
+        "type": 2,
+        "money": 2999.0
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "70006"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "7.4 支付桩负向测试 - 7.4.5 使用无效orderId支付（不存在的订单）",
+      "method": "POST",
+      "path": "/demo/payment/complete",
+      "json": {
+        "orderId": 999999,
+        "type": 2,
+        "money": 100.0,
+        "paymentMode": 1
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "70006"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "8. 订单查询与管理 - 8.1 订单列表查询",
+      "method": "GET",
+      "path": "/order/getAll",
+      "params": {
+        "pageSize": "10",
+        "page": "1"
+      },
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "8. 订单查询与管理 - 8.2 订单详情查询",
+      "method": "GET",
+      "path": "/order/getById",
+      "params": {
+        "orderId": "${orderId}",
+        "type": "2"
+      },
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "8. 订单查询与管理 - 8.3 取消订单",
+      "method": "POST",
+      "path": "/order/cancel",
+      "json": {
+        "orderId": "${orderId}",
+        "type": 2
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "8. 订单查询与管理 - 8.4 确认收货",
+      "method": "POST",
+      "path": "/order/confirm",
+      "json": {
+        "orderId": "${orderId}",
+        "type": 2
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "8. 订单查询与管理 - 8.5 删除订单",
+      "method": "POST",
+      "path": "/order/delete",
+      "json": {
+        "orderId": "${orderId}",
+        "type": 2
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "8. 订单查询与管理 - 8.6 物流信息查询",
+      "method": "GET",
+      "path": "/order/getDilevery",
+      "params": {
+        "orderId": "${orderId}"
+      },
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "8. 订单查询与管理 - 8.7 申请退款（进入售后）",
+      "method": "GET",
+      "path": "/order/refund",
+      "params": {
+        "orderId": "${orderId}",
+        "type": "2"
+      },
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "200"
+        },
+        {
+          "type": "json_field_exists",
+          "path": "data"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "9. 负向测试用例 - 9.1 无Token访问（未授权）",
+      "method": "GET",
+      "path": "/cart/getCart",
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "20005"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "9. 负向测试用例 - 9.2 无效Token访问（伪造Token）",
+      "method": "GET",
+      "path": "/cart/getCart",
+      "headers": {
+        "Authorization": "invalid_token_12345"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "20004"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "9. 负向测试用例 - 9.3 越权访问他人订单（IDOR测试）",
+      "method": "GET",
+      "path": "/order/getById",
+      "params": {
+        "orderId": "1",
+        "type": "2"
+      },
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "9. 负向测试用例 - 9.4 提交订单缺少必填字段（无receiveId）",
+      "method": "POST",
+      "path": "/order/submit",
+      "json": {
+        "shops": [
+          {
+            "shopId": "${shopId}",
+            "skus": [
+              {
+                "skuId": "${skuId}",
+                "number": 1,
+                "selected": 1,
+                "shopSeckillId": 0,
+                "shopDiscountId": 0,
+                "platformSeckillId": 0,
+                "platformDiscountId": 0,
+                "useMember": false,
+                "priceId": 0,
+                "composeId": 0,
+                "sceneId": 0,
+                "buyerCouponId": 0,
+                "buyerShopCouponId": 0
+              }
+            ],
+            "distribution": {
+              "logisticsId": -1,
+              "distributionName": "全国包邮",
+              "distributionPrice": 0
+            }
+          }
+        ],
+        "couponId": 0,
+        "price": 2999.0,
+        "discountPrice": 0,
+        "paymentMode": 1
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "9. 负向测试用例 - 9.5 提交订单使用非法SKU（不存在的skuId）",
+      "method": "POST",
+      "path": "/order/submit",
+      "json": {
+        "receiveId": "${receiveId}",
+        "shops": [
+          {
+            "shopId": "${shopId}",
+            "skus": [
+              {
+                "skuId": 999999,
+                "number": 1,
+                "selected": 1,
+                "shopSeckillId": 0,
+                "shopDiscountId": 0,
+                "platformSeckillId": 0,
+                "platformDiscountId": 0,
+                "useMember": false,
+                "priceId": 0,
+                "composeId": 0,
+                "sceneId": 0,
+                "buyerCouponId": 0,
+                "buyerShopCouponId": 0
+              }
+            ],
+            "distribution": {
+              "logisticsId": -1,
+              "distributionName": "全国包邮",
+              "distributionPrice": 0
+            }
+          }
+        ],
+        "couponId": 0,
+        "price": 2999.0,
+        "discountPrice": 0,
+        "paymentMode": 1
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "9. 负向测试用例 - 9.6 提交订单超库存（购买数量超过库存）",
+      "method": "POST",
+      "path": "/order/submit",
+      "json": {
+        "receiveId": "${receiveId}",
+        "shops": [
+          {
+            "shopId": "${shopId}",
+            "skus": [
+              {
+                "skuId": "${skuId}",
+                "number": 9999,
+                "selected": 1,
+                "shopSeckillId": 0,
+                "shopDiscountId": 0,
+                "platformSeckillId": 0,
+                "platformDiscountId": 0,
+                "useMember": false,
+                "priceId": 0,
+                "composeId": 0,
+                "sceneId": 0,
+                "buyerCouponId": 0,
+                "buyerShopCouponId": 0
+              }
+            ],
+            "distribution": {
+              "logisticsId": -1,
+              "distributionName": "全国包邮",
+              "distributionPrice": 0
+            }
+          }
+        ],
+        "couponId": 0,
+        "price": 2999.0,
+        "discountPrice": 0,
+        "paymentMode": 1
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "json_field_equals",
+          "path": "code",
+          "equals": "80001"
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "9. 负向测试用例 - 9.7 提交订单缺少shopId",
+      "method": "POST",
+      "path": "/order/submit",
+      "json": {
+        "receiveId": "${receiveId}",
+        "shops": [
+          {
+            "skus": [
+              {
+                "skuId": "${skuId}",
+                "number": 1,
+                "selected": 1,
+                "shopSeckillId": 0,
+                "shopDiscountId": 0,
+                "platformSeckillId": 0,
+                "platformDiscountId": 0,
+                "useMember": false,
+                "priceId": 0,
+                "composeId": 0,
+                "sceneId": 0,
+                "buyerCouponId": 0,
+                "buyerShopCouponId": 0
+              }
+            ],
+            "distribution": {
+              "logisticsId": -1,
+              "distributionName": "全国包邮",
+              "distributionPrice": 0
+            }
+          }
+        ],
+        "couponId": 0,
+        "price": 2999.0,
+        "discountPrice": 0,
+        "paymentMode": 1
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "9. 负向测试用例 - 9.8 购物车添加非法SKU（skuId=0）",
+      "method": "POST",
+      "path": "/cart/addCart",
+      "json": {
+        "shopId": "${shopId}",
+        "skuId": 0,
+        "number": 1
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "9. 负向测试用例 - 9.9 已完成订单执行取消（状态冲突）",
+      "method": "POST",
+      "path": "/order/cancel",
+      "json": {
+        "orderId": "${orderId}",
+        "type": 2
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "9. 负向测试用例 - 9.10 添加地址缺少必填字段",
+      "method": "POST",
+      "path": "/receive/save",
+      "json": {
+        "receiveName": "测试用户"
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "9. 负向测试用例 - 9.11 领取不存在的优惠券",
+      "method": "POST",
+      "path": "/coupon/takeCoupon",
+      "json": {
+        "couponId": 99999
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    },
+    {
+      "name": "9. 负向测试用例 - 9.12 提交订单价格为0（非法价格）",
+      "method": "POST",
+      "path": "/order/submit",
+      "json": {
+        "receiveId": "${receiveId}",
+        "shops": [
+          {
+            "shopId": "${shopId}",
+            "skus": [
+              {
+                "skuId": "${skuId}",
+                "number": 1,
+                "selected": 1,
+                "shopSeckillId": 0,
+                "shopDiscountId": 0,
+                "platformSeckillId": 0,
+                "platformDiscountId": 0,
+                "useMember": false,
+                "priceId": 0,
+                "composeId": 0,
+                "sceneId": 0,
+                "buyerCouponId": 0,
+                "buyerShopCouponId": 0
+              }
+            ],
+            "distribution": {
+              "logisticsId": -1,
+              "distributionName": "全国包邮",
+              "distributionPrice": 0
+            }
+          }
+        ],
+        "couponId": 0,
+        "price": 0,
+        "discountPrice": 0,
+        "paymentMode": 1
+      },
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${token}"
+      },
+      "assertions": [
+        {
+          "type": "status_code",
+          "equals": 200
+        },
+        {
+          "type": "response_time_less_than",
+          "ms": 5000
+        }
+      ]
+    }
+  ]
+}

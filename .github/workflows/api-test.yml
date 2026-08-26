@@ -17,10 +17,16 @@ jobs:
       - name: Start mock server
         run: |
           python mock_server.py &
-          sleep 2
+          for i in 1 2 3 4 5; do
+            python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:19007/products', timeout=1)" && exit 0
+            sleep 1
+          done
+          echo "mock server did not become ready"
+          exit 1
       - name: Run API tests
         run: python run_tests.py --case cases/demo_cases.json --report-dir reports
       - name: Upload reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: api-test-reports

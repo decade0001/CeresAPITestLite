@@ -1,10 +1,10 @@
 {
   "name": "CERESHOP API regression template",
-  "base_url": "http://127.0.0.1:9007",
+  "base_url": "http://localhost:9007",
   "variables": {
-    "phone": "请替换为测试账号",
-    "password": "请替换为测试密码",
-    "productId": "请替换为商品ID"
+    "phone": "13800138001",
+    "password": "123456",
+    "productId": "556"
   },
   "global_headers": {
     "Accept": "application/json"
@@ -96,4 +96,3 @@
     }
   ]
 }
-

@@ -29,7 +29,16 @@
 
 ```text
 CeresAPITestLite/
-  run_tests.py                  # 通用接口自动化测试运行器
+  run_tests.py                  # 兼容 CLI / 导入门面
+  ceres_api_test_lite/          # 可维护的核心模块
+    config.py                   # JSON 用例与报告读写
+    context.py                  # 变量替换与 JSON 点路径取值
+    transport.py                # HTTP 请求与响应归一化
+    extractors.py               # 跨用例变量提取
+    assertions.py               # 内置/自定义断言注册表
+    runner.py                   # 测试套编排与汇总
+    reporting.py                # HTML/JSON 报告
+    cli.py                      # 命令行参数入口
   mock_server.py                # 本地模拟 API 服务
   requirements.txt              # Requests / Jinja2 依赖
   templates/

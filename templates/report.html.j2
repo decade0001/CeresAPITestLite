@@ -1,30 +1,56 @@
+{#
+  report.html.j2 —— HTML 测试报告模板（Jinja2 模板）
+
+  【这个文件是干什么的？】
+  它是一份“报告的模具”。run_tests.py 跑完测试后，会把测试结果（summary）
+  填进这个模具，生成一个可以在浏览器里打开的 HTML 报告页。
+
+  【和 run_tests.py 的关系】
+  run_tests.py 里的 render_html() 函数会加载这个模板，把 summary 数据传进来：
+      template.render(summary=summary)
+  然后模板里的 {{ summary.xxx }} 就会被替换成真实数据。
+
+  【Jinja2 模板语法速查（看懂这三个就够了）】
+    {{ 变量 }}        —— 输出一个变量的值，如 {{ summary.total }} 会显示总数
+    {% 控制语句 %}    —— 写逻辑，如 {% for item in list %}...{% endfor %} 循环
+    {# 注释 #}        —— 写注释，不会出现在最终生成的 HTML 里（你现在看的这些就是）
+#}
 <!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
+  {# 标题用套件名 + "API Test Report"，浏览器标签页会显示这个 #}
   <title>{{ summary.suite }} - API Test Report</title>
+  {# 下面 <style> 是内联 CSS，让报告长得好看点（卡片、表格、颜色等）。
+     不依赖外部样式文件，保证生成的 HTML 单文件就能看。 #}
   <style>
     body { font-family: Arial, "Microsoft YaHei", sans-serif; margin: 24px; color: #1f2937; }
     h1 { margin: 0 0 4px; }
     .meta { color: #6b7280; margin-bottom: 18px; }
+    {# .cards 用 flex 横向排列三个统计卡片（总数/通过/失败） #}
     .cards { display: flex; gap: 12px; margin-bottom: 18px; }
     .card { border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px 14px; min-width: 100px; }
     .num { font-size: 24px; font-weight: 700; }
     table { border-collapse: collapse; width: 100%; font-size: 13px; }
     th, td { border: 1px solid #e5e7eb; padding: 8px; vertical-align: top; }
     th { background: #f3f4f6; text-align: left; }
+    {# 通过用绿色、失败用红色，一眼能看出结果 #}
     .pass { color: #047857; font-weight: 700; }
     .fail { color: #b91c1c; font-weight: 700; }
   </style>
 </head>
 <body>
+  {# 大标题：套件名称 #}
   <h1>{{ summary.suite }}</h1>
+  {# 一行元信息：测试地址 + 生成时间 #}
   <div class="meta">Base URL: {{ summary.base_url }} | Generated at: {{ summary.generated_at }}</div>
+  {# 三个统计卡片：总数 / 通过数 / 失败数 #}
   <div class="cards">
     <div class="card"><div>total</div><div class="num">{{ summary.total }}</div></div>
     <div class="card"><div>passed</div><div class="num pass">{{ summary.passed }}</div></div>
     <div class="card"><div>failed</div><div class="num fail">{{ summary.failed }}</div></div>
   </div>
+  {# 详细结果表格：每条用例一行 #}
   <table>
     <thead>
       <tr>
@@ -39,17 +65,22 @@
       </tr>
     </thead>
     <tbody>
+      {# 遍历 summary.results（每条用例的结果），生成一行 <tr> #}
       {% for item in summary.results %}
+      {# set：定义一个临时变量 response，取 item.response，没有就给空字典 {}。
+         这样下面 response.xxx 不会因为没数据而报错。 #}
       {% set response = item.response or {} %}
       <tr>
         <td>{{ item.index }}</td>
         <td>{{ item.name }}</td>
+        {# 三元表达式：通过显示 PASS（绿）、失败显示 FAIL（红），同时设置 class 控制颜色 #}
         <td class="{{ 'pass' if item.passed else 'fail' }}">{{ 'PASS' if item.passed else 'FAIL' }}</td>
         <td>{{ response.method or '' }}</td>
         <td>{{ response.status_code or '' }}</td>
         <td>{{ response.elapsed_ms or '' }}</td>
         <td>{{ response.url or '' }}</td>
         <td>
+          {# 遍历这条用例的所有断言，每条占一行，显示通过/失败 + 说明 #}
           {% for assertion in item.assertions %}
             {{ 'PASS' if assertion.passed else 'FAIL' }} - {{ assertion.message }}<br>
           {% endfor %}
